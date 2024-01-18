@@ -1,0 +1,69 @@
+#include <cstdio>
+#include <iostream>
+
+void display(void * val){
+    std::cout << *static_cast<int*>(val) << std::endl;
+}
+
+struct ClockOfTheLongNow{
+    ClockOfTheLongNow(){
+        year=2019;    
+    }
+    ClockOfTheLongNow(int year_in){
+        if(!set_year(year_in)){
+            year=2019;
+        }
+    }
+
+    void add_year(){
+        year++;
+    }
+
+    bool set_year(int new_year){
+        if(new_year<2019) return false;
+        year= new_year;
+        return true;
+    }
+
+    int get_year(){
+        return year;
+    }
+
+private:
+    int year;
+};
+
+void add_year(ClockOfTheLongNow& clock){
+    clock.set_year(clock.get_year()+1); // No deref operator needed
+}
+
+int main() { 
+
+    ClockOfTheLongNow clock;
+     printf("The year is %d.\n", clock.get_year()); 
+    add_year(clock); // Clock is implicitly passed by reference!
+    printf("The year is %d.\n", clock.get_year());
+    char lower[]="abc?e";
+    char upper[]="ABC?E";
+    //char* upper_ptr=upper;   //Equivalent:&upper[0]
+    char* upper_ptr = &upper[0];
+    //lower[3]='d';   //lower now contains a b c d e \0
+    *(lower+3)='d';
+    //upper_ptr[3]='D'; // upper now contains A B C D E \0
+    *(upper_ptr+3)='D';
+
+    //char letter_d=lower[3];          //letter_d =  'd';
+    char letter_d=*(lower+3);    //lower decays into a pointer when we add
+    //char letter_D=upper_ptr[3];      //letter_D = 'D';
+    char letter_D=*(upper_ptr+3);
+    printf("lower: %s\nupper: %s\n", lower, upper);
+
+    printf("%c\n%c\n", letter_d, letter_D);
+
+    //lower[7] = 'g';
+    // *(lower + 7) = 'g';
+
+    int x=16;
+    int* ptr =&x;
+    display(ptr);
+    }
